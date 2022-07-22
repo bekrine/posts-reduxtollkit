@@ -1,6 +1,7 @@
 import { createSlice, nanoid,createAsyncThunk } from "@reduxjs/toolkit";
 import axios from "axios";
 import { sub } from 'date-fns';
+import { act } from "react-dom/test-utils";
 const POSTS_URL='https://jsonplaceholder.typicode.com/posts'
 const initialState = {
     posts:[],
@@ -24,6 +25,16 @@ export const addNewpost=createAsyncThunk('posts/addnewpost',async(inistialPost)=
         
     } catch (error) {
         return error.message
+    }
+})
+
+export const updatePost=createAsyncThunk('posts/updatepost',async (inistialPost)=>{
+    const {id}=inistialPost
+    try {
+        const respance=await axios.put(`POSTS_URL/${id}`,inistialPost)
+        return respance.data
+    } catch (err) {
+        return err.message
     }
 })
 
@@ -97,6 +108,17 @@ const postsSlice = createSlice({
                     coffee: 0
             }
             state.posts.push(action.payload )
+        }).addCase(updatePost.fulfilled,(state,action)=>{
+            if(!action.payload?.id){
+                console.log('update coulde not complte')
+                console.log(action.payload)
+                return
+            }
+            const {id}=action.payload
+            action.payload.date=new Date().toISOString()
+            const posts=state.posts.filter(post=>post.id!==id)
+            state.posts=[...posts,action.payload]
+
         })
     }
                         
