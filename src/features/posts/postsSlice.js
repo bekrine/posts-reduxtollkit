@@ -31,8 +31,18 @@ export const addNewpost=createAsyncThunk('posts/addnewpost',async(inistialPost)=
 export const updatePost=createAsyncThunk('posts/updatepost',async (inistialPost)=>{
     const {id}=inistialPost
     try {
-        const respance=await axios.put(`POSTS_URL/${id}`,inistialPost)
+        const respance=await axios.put(`${POSTS_URL}/${id}`,inistialPost)
         return respance.data
+    } catch (err) {
+        return err.message
+    }
+})
+export const deletePost=createAsyncThunk('posts/deletePost',async (inistialPost)=>{
+    const {id}=inistialPost
+    try {
+        const respance=await axios.delete(`${POSTS_URL}/${id}`)
+        if(respance?.status === 200) return inistialPost
+        return `${respance?.status}:${respance?.statusText}`
     } catch (err) {
         return err.message
     }
@@ -102,10 +112,10 @@ const postsSlice = createSlice({
             action.payload.date=new Date().toISOString()
             action.payload.reaction={
                 thumbsUp: 0,
-                    wow: 0,
-                    heart: 0,
-                    rocket: 0,
-                    coffee: 0
+                wow: 0,
+                heart: 0,
+                rocket: 0,
+                coffee: 0
             }
             state.posts.push(action.payload )
         }).addCase(updatePost.fulfilled,(state,action)=>{
@@ -119,6 +129,16 @@ const postsSlice = createSlice({
             const posts=state.posts.filter(post=>post.id!==id)
             state.posts=[...posts,action.payload]
 
+        }).addCase(deletePost.fulfilled,(state,action)=>{
+            if(!action.payload?.id){
+                console.log('delete coulde not complte')
+                console.log(action.payload)
+                return
+            }
+            const {id}=action.payload
+            const posts=state.posts.filter(post=>post.id!==id)
+            state.posts=posts
+            
         })
     }
                         
