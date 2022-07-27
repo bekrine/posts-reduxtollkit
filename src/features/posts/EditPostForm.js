@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
-import { selectSingelPost, updatePost, deletePost } from './postsSlice'
+import { selectSingelPost, updatePost,deletePost } from './postsSlice'
 import { useParams, useNavigate } from 'react-router-dom'
 
 import { selectAllUsers } from "../users/usersSlice";
@@ -10,6 +10,7 @@ const EditPostForm = () => {
     const navigate = useNavigate()
 
     const post = useSelector((state) => selectSingelPost(state, Number(postId)))
+    
     const users = useSelector(selectAllUsers)
 
     const [title, setTitle] = useState(post?.title)
@@ -105,12 +106,12 @@ const EditPostForm = () => {
                 >
                     Save Post
                 </button>
-                <button className="deleteButton"
+                 <button className="deleteButton"
                     type="button"
                     onClick={onDeletePostClicked}
                 >
                     Delete Post
-                </button>
+                </button> 
             </form>
         </section>
     )

@@ -1,18 +1,12 @@
-import { useSelector,useDispatch } from "react-redux";
-import { selectAllError, selectAllPosts, selectAllStatus,fetchPosts } from "./postsSlice";
-import { useEffect } from "react";
+import { useSelector } from "react-redux";
+import { selectAllError, selectAllPosts, selectAllStatus } from "./postsSlice";
 import PostsExcerpt from "./PostsExcerpt";
 
 const PostsList = () => {
-    const dispatch=useDispatch()
     const posts = useSelector(selectAllPosts)
     const postsStatus = useSelector(selectAllStatus)
     const error = useSelector(selectAllError)
-    useEffect(()=>{
-        if(postsStatus === 'idel'){
-            dispatch(fetchPosts())
-        }
-    },[postsStatus,dispatch])
+    
 
 
     let content
