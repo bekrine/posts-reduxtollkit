@@ -1,9 +1,9 @@
 import { useSelector } from "react-redux";
-import { selectAllError, selectAllPosts, selectAllStatus } from "./postsSlice";
+import { selectPostId, selectAllError, selectAllStatus } from "./postsSlice";
 import PostsExcerpt from "./PostsExcerpt";
 
 const PostsList = () => {
-    const posts = useSelector(selectAllPosts)
+    const orderdPostId=useSelector(selectPostId)
     const postsStatus = useSelector(selectAllStatus)
     const error = useSelector(selectAllError)
     
@@ -13,8 +13,7 @@ const PostsList = () => {
     if(postsStatus === 'loading'){
         content=<div>Loading...</div>
     }else if(postsStatus === 'succeeded'){
-        const orderedPosts = posts.slice().sort((a, b) => b.date.localeCompare(a.date))
-        content = orderedPosts.map(post => <PostsExcerpt key={post.id} post={post}/>)
+        content=orderdPostId.map(postId=><PostsExcerpt key={postId} postId={postId}/>)
     }else if(postsStatus === 'failed'){
         content=<p>{error}</p>
     }
